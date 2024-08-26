@@ -28,9 +28,9 @@ public class JsonRpcHttpMiddleware
             var json = Encoding.UTF8.GetString(buffer);
 
             Console.WriteLine(json);
-  
+            
             var jsonRpcFormatter = new JsonMessageFormatter(Encoding.UTF8);
-            var jsonRpcHandler = new HeaderDelimitedMessageHandler(context.Response.Body, context.Request.Body, jsonRpcFormatter);
+            var jsonRpcHandler = new LengthHeaderMessageHandler(context.Response.Body, context.Request.Body, jsonRpcFormatter);
 
             using (var jsonRpc = new JsonRpc(jsonRpcHandler, new JsonRpcService()))
             {
@@ -38,12 +38,6 @@ public class JsonRpcHttpMiddleware
                 
                 await jsonRpc.Completion;
             }
-            
-            buffer = new byte[1024];
-            
-            json = Encoding.UTF8.GetString(buffer);
-
-            Console.WriteLine(json);
 
             return;
         }
